@@ -23,9 +23,20 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 app.get('/', function(req, res)
     {
       let query1 = "SELECT * FROM Students;";
+      let query2 = "SELECT * FROM Proficiencies;";
       db.pool.query(query1, function(error, rows, fields){
-        res.render('index',{data: rows});                    // Note the call to render() and not send(). Using render() ensures the templating engine
-    })                                         // will process this file, before sending the finished HTML to the client.
+        
+        // Save the people
+        let students = rows;
+        
+        // Run the second query
+        db.pool.query(query2, (error, rows, fields) => {
+            
+            // Save the planets
+            let proficiencies = rows;
+            return res.render('index', {data: students, proficiencies: proficiencies});
+        })
+      })
   });
 
 app.post('/add-student-ajax', function(req, res) 
@@ -33,14 +44,21 @@ app.post('/add-student-ajax', function(req, res)
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
-    // Capture NULL values and use the right query -- only way I could get it working  
+    // Capture NULL values and use the right query -- only way I could get it working
+    let waiver_signed = data.waiver_signed;
+    if (waiver_signed === "Yes"){
+        waiver_signed = 1;
+    } else {
+        waiver_signed = 0;
+    }
+
     let proficiency_value = data.id_proficiency;
     if (proficiency_value === ""){
         proficiency_value = null
-        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (${proficiency_value}, '${data.student_fname}', '${data.student_lname}', '${data.student_phone_number}', '${data.emergency_fname}', '${data.emergency_lname}', '${data.emergency_phone}', '${data.waiver_signed}')`;
+        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (${proficiency_value}, '${data.student_fname}', '${data.student_lname}', '${data.student_phone_number}', '${data.emergency_fname}', '${data.emergency_lname}', '${data.emergency_phone}', ${waiver_signed})`;
     }
     else{
-        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES ('${proficiency_value}', '${data.student_fname}', '${data.student_lname}', '${data.student_phone_number}', '${data.emergency_fname}', '${data.emergency_lname}', '${data.emergency_phone}', '${data.waiver_signed}')`;
+        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES ('${proficiency_value}', '${data.student_fname}', '${data.student_lname}', '${data.student_phone_number}', '${data.emergency_fname}', '${data.emergency_lname}', '${data.emergency_phone}', ${waiver_signed})`;
     }
 
     // Create the query and run it on the database

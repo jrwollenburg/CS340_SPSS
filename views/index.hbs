@@ -44,7 +44,12 @@
 <p>To add a new person, please enter their information below and click 'Submit'!</p>
 <form id="add-student-form-ajax">
     <label for="input-proficiency">Proficiency Level: </label>
-    <input type="text" name="input-proficiency" id="input-proficiency">
+    <select type="select" name="input-proficiency" id="input-proficiency">
+        <option value="">Select from List</option>
+        {{#each proficiencies}}
+        <option value="{{this.id_proficiency}}">{{this.proficiency_name}}</option>
+        {{/each}}
+    </select>
 
     <label for="input-fname">First Name: </label>
     <input type="text" name="input-fname" id="input-fname">
