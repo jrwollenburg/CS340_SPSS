@@ -1,4 +1,5 @@
 <!-- students.hbs -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <h1>Students at Slashing Pow Ski School</h1>
 <p>Nav Bar will go here</p>
 {{!-- Create a table --}}
@@ -15,6 +16,7 @@
                 {{@key}}
             </th>
             {{/each}}
+            <th>Delete</th>
         </tr>
     </thead>
 
@@ -32,11 +34,12 @@
             <td>{{this.emergency_lname}}</td>
             <td>{{this.emergency_phone}}</td>
             <td>{{this.waiver_signed}}</td>
+            <td><button onclick="deleteStudent({{this.id_student}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>
 </table>
-
+<script src="./js/delete_student.js"></script>
 <!-- /views/index.hbs -->
 
 {{!-- Form to add a record to the table  --}}

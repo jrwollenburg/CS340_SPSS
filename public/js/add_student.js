@@ -97,7 +97,7 @@ addRowToTable = (data) => {
     let emerLastCell = document.createElement("TD");
     let emerPhoneCell = document.createElement("TD");
     let waiverCell = document.createElement("TD");
-
+    let deleteCell = document.createElement("TD");
     // Fill the cells with correct data
     idCell.innerText = newRow.id_student;
     profCell.innerText = newRow.id_proficiency;
@@ -108,7 +108,11 @@ addRowToTable = (data) => {
     emerLastCell.innerText = newRow.emergency_lname;
     emerPhoneCell.innerText = newRow.emergency_phone;
     waiverCell.innerText = newRow.waiver_signed;
-
+    deleteCell = document.createElement("button");
+    deleteCell.innerHTML = "Delete";
+    deleteCell.onclick = function(){
+        deleteStudent(newRow.id);
+    };
     // Add the cells to the row 
     row.appendChild(idCell);
     row.appendChild(profCell);
@@ -119,7 +123,9 @@ addRowToTable = (data) => {
     row.appendChild(emerLastCell);
     row.appendChild(emerPhoneCell);
     row.appendChild(waiverCell);
-    
+    row.appendChild(deleteCell);
+    // Add a row attribute so the deleteRow function can find a newly added row
+    row.setAttribute('data-value', newRow.id);
     // Add the row to the table
     currentTable.appendChild(row);
 }
