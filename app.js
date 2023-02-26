@@ -98,33 +98,19 @@ app.post('/add-student-ajax', function(req, res)
 app.delete('/delete-student-ajax/', function(req,res,next){
     let data = req.body;
     let studentID = parseInt(data.id_student);
-    let deleteStudentsRegistrations = `DELETE FROM Students_has_Lessons WHERE id_student = ?`;
     let deleteStudents= `DELETE FROM Students WHERE id_student = ?`;
   
-  
-          // Run the 1st query
-          db.pool.query(deleteStudentsRegistrations, [studentID], function(error, rows, fields){
-              if (error) {
-  
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-              console.log(error);
-              res.sendStatus(400);
-              }
-  
-              else
-              {
-                  // Run the second query
-                  db.pool.query(deleteStudents, [studentID], function(error, rows, fields) {
-  
-                      if (error) {
-                          console.log(error);
-                          res.sendStatus(400);
-                      } else {
-                          res.sendStatus(204);
-                      }
-                  })
-              }
-  })});
+    // Delete of student will cascade
+    db.pool.query(deleteStudents, [studentID], function(error, rows, fields) {
+
+        if (error) {
+            console.log(error);
+            res.sendStatus(400);
+        } else {
+            res.sendStatus(204);
+        }
+    })
+  });
 /*
     LISTENER
 */

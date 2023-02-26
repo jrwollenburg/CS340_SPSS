@@ -111,7 +111,7 @@ addRowToTable = (data) => {
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";
     deleteCell.onclick = function(){
-        deleteStudent(newRow.id);
+        deleteStudent(newRow.id_student); // Won't refresh old data added before opening app
     };
     // Add the cells to the row 
     row.appendChild(idCell);
@@ -125,7 +125,7 @@ addRowToTable = (data) => {
     row.appendChild(waiverCell);
     row.appendChild(deleteCell);
     // Add a row attribute so the deleteRow function can find a newly added row
-    row.setAttribute('data-value', newRow.id);
+    row.setAttribute('data-value', newRow.id_student);
     // Add the row to the table
     currentTable.appendChild(row);
 }
