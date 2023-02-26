@@ -34,7 +34,19 @@ function deleteRow(id_student){
        //rows would be accessed using the "row" variable assigned in the for loop
        if (table.rows[i].getAttribute("data-value") == id_student) {
             table.deleteRow(i);
+            deleteDropDownMenu(id_student);
             break;
        }
+    }
+}
+
+function deleteDropDownMenu(id_student){
+    let selectMenu = document.getElementById("mySelect");
+    for (let i = 0; i < selectMenu.length; i++){
+      if (Number(selectMenu.options[i].value) === Number(id_student)){
+        selectMenu[i].remove();
+        break;
+    } 
+
     }
 }

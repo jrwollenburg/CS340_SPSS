@@ -1,109 +1,22 @@
-<!-- students.hbs -->
-<h1>Students at Slashing Pow Ski School</h1>
-<p>Nav Bar will go here</p>
-{{!-- Create a table --}}
-<table id = "students-table">
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SPSS</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" type="image/x-icon" href="./spss_icon.png" />
+  </head>
+  <body>
+    <h1>Slashing Pow Ski School</h1>
 
-    {{!-- Header section --}}
-    <thead>
+    <h2>Welcome to Slashing Pow Ski School</h2>
 
-        {{!-- For just the first row, we print each key of the row object as a header cell so we
-        know what each column means when the pem_fname renders --}}
-        <tr>
-            {{#each data.[0]}}
-            <th>
-                {{@key}}
-            </th>
-            {{/each}}
-            <th>Delete</th>
-        </tr>
-    </thead>
+    <p>
+      Click on the above buttons to navigate the website and to access different
+      tables in the database. You can view the tables for Instructors, Students,
+      Lessons, Proficiencies, and the intersection table for Students and
+      Lessons.
+    </p>
 
-    {{!-- Body section --}}
-    <tbody>
-
-        {{#each data}}
-        <tr>
-            <td>{{this.id_student}}</td>
-            <td>{{this.id_proficiency}}</td>
-            <td>{{this.student_fname}}</td>
-            <td>{{this.student_lname}}</td>
-            <td>{{this.student_phone_number}}</td>
-            <td>{{this.emergency_fname}}</td>
-            <td>{{this.emergency_lname}}</td>
-            <td>{{this.emergency_phone}}</td>
-            <td>{{this.waiver_signed}}</td>
-            <td><button onclick="deleteStudent({{this.id_student}})">Delete</button></td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
-<script src="./js/delete_student.js"></script>
-<!-- /views/index.hbs -->
-
-{{!-- Form to add a record to the table  --}}
-<h2>Add a Student</h2>
-<p>To add a new student, please enter their information below and click 'Submit'!</p>
-<form id="add-student-form-ajax">
-    <label for="input-proficiency">Proficiency Level: </label>
-    <select type="select" name="input-proficiency" id="input-proficiency">
-        <option value=""></option>
-        {{#each proficiencies}}
-        <option value="{{this.id_proficiency}}">{{this.proficiency_name}}</option>
-        {{/each}}
-    </select>
-
-    <label for="input-fname">First Name: </label>
-    <input type="text" name="input-fname" id="input-fname">
     
-    <label for="input-lname">Last Name: </label>
-    <input type="text" name="input-lname" id="input-lname">
-
-    <label for="input-phone">Phone Number: </label>
-    <input type="text" name="input-phone" id="input-phone">
-
-    <label for="input-em_fname">Emergency Contact First Name: </label>
-    <input type="text" name="input-em_fname" id="input-em_fname">
-
-    <label for="input-em_lname">Emergency Contact Last Name: </label>
-    <input type="text" name="input-em_lname" id="input-em_lname">
-
-    <label for="input-em_phone">Emergency Contact Number: </label>
-    <input type="text" name="input-em_phone" id="input-em_phone">
-
-    <label for="input-waiver">Waiver Signed: </label>
-    <select type="select" name="input-waiver" id="input-waiver">
-        <option default value="Yes">Yes</option>
-        <option value="No">No</option>
-    </select>
-
-    <input type="submit">
-</form>
-
-{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
-<script src="./js/add_student.js"></script>
-
-<h2>Updating A User's HomeWorld Form</h2>
-<p>To update a specific user's homeworld select their name from the drop-down menu on the left and their desired homeworld from the drop down menu on the right</p>
-<form id="update-person-form-ajax">
-
-    <label for="input-fullname">Full name: </label>
-    <select name="input-fullname" id="mySelect">
-        <option value="test">Select a Person</option>
-        {{#each data}}
-        <option value="{{this.id}}">{{this.fname}} {{this.lname}}</option>
-        {{/each}}
-    </select>
-
-    <label for="input-homeworld">Homeworld: </label>
-    <select name="input-homeworld" id="input-homeworld-update">
-        <option>Select a Planet</option>
-        {{#each planets}}
-        <option value="{{this.id}}">{{this.name}}</option>
-        {{/each}}
-    </select>
-    <input type="submit">
-
-</form>
-
-<script src="./js/update_person.js"></script>
+  </body>
+</html>

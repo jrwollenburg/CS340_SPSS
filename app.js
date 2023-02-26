@@ -20,7 +20,27 @@ app.set('view engine', '.hbs');                 // Tell express to use the handl
 /*
     ROUTES
 */
-app.get('/', function(req, res)
+app.get('/home', (req, res) => {
+    res.render('index');
+  });
+
+app.get('/instructors', (req, res) => {
+    res.render('instructors');
+  });
+
+app.get('/student-registrations', (req, res) => {
+    res.render('studentregistrations');
+  });
+
+app.get('/lessons', (req, res) => {
+    res.render('lessons');
+  });
+
+  app.get('/proficiencies', (req, res) => {
+    res.render('proficiencies');
+  });
+
+app.get('/students', function(req, res)
     {
       let query1 = "SELECT * FROM Students;";
       let query2 = "SELECT * FROM Proficiencies;";
@@ -32,9 +52,8 @@ app.get('/', function(req, res)
         // Run the second query
         db.pool.query(query2, (error, rows, fields) => {
             
-            // Save the planets
             let proficiencies = rows;
-            return res.render('index', {data: students, proficiencies: proficiencies});
+            return res.render('students', {data: students, proficiencies: proficiencies});
         })
       })
   });
@@ -111,6 +130,41 @@ app.delete('/delete-student-ajax/', function(req,res,next){
         }
     })
   });
+
+app.put('/put-student-ajax', function(req,res,next){
+    let data = req.body;
+
+    let proficiency = data.proficiency;
+    let student = parseInt(data.fullname);
+
+    let queryUpdateProficiency = `UPDATE Students SET id_proficiency = ? WHERE Students.id_student = ?`;
+    let selectProficiency = `SELECT * FROM Proficiencies WHERE id_proficiency = ?`
+
+        // Run the 1st query
+        db.pool.query(queryUpdateProficiency, [proficiency, student], function(error, rows, fields){
+            if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error);
+            res.sendStatus(400);
+            }
+
+            // If there was no error, we run our second query and return that data so we can use it to update the people's
+            // table on the front-end
+            else
+            {
+                // Run the second query
+                db.pool.query(selectProficiency, [proficiency], function(error, rows, fields) {
+
+                    if (error) {
+                        console.log(error);
+                        res.sendStatus(400);
+                    } else {
+                        res.send(rows);
+                    }
+                })
+            }
+})});
 /*
     LISTENER
 */
