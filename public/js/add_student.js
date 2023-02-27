@@ -1,8 +1,8 @@
 // Get the objects we need to modify
-let addPersonForm = document.getElementById('add-student-form-ajax');
+let addStudentForm = document.getElementById('add-student-form-ajax');
 
 // Modify the objects we need
-addPersonForm.addEventListener("submit", function (e) {
+addStudentForm.addEventListener("submit", function (e) {
     
     // Prevent the form from submitting
     e.preventDefault();
@@ -43,12 +43,13 @@ addPersonForm.addEventListener("submit", function (e) {
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/add-student-ajax", true);
     xhttp.setRequestHeader("Content-type", "application/json");
-
+    
     // Tell our AJAX request how to resolve
     xhttp.onreadystatechange = () => {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
 
             // Add the new data to the table
+
             addRowToTable(xhttp.response);
 
             // Clear the input fields for another transaction

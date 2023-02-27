@@ -1,1 +1,45 @@
 <h1>Proficiencies</h1>
+<table id = "proficiency-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the pem_fname renders --}}
+        <tr>
+            {{#each proficiencies.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>Delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{#each proficiencies}}
+        <tr>
+            <td>{{this.Proficiency_ID}}</td>
+            <td>{{this.Proficiency_Name}}</td>
+            <td><button onclick="deleteProficiency('{{this.Proficiency_ID}}')">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_proficiency.js"></script>
+{{!-- Form to add a record to the table  --}}
+<h2>Add a Proficiency Level</h2>
+<p>To add a new proficiency, please enter its information below and click 'Submit'!</p>
+
+<form id="add-proficiency-form" method="POST" action="/add-proficiency-form">
+    <label for="input-id">Proficiency Code: </label>
+    <input type="text" name="input-id" id="input-id">
+
+    <label for="input-name">Proficiency Name: </label>
+    <input type="text" name="input-name" id="input-name">
+
+    <input type="submit">
+</form>
+

@@ -36,8 +36,12 @@ app.get('/lessons', (req, res) => {
     res.render('lessons');
   });
 
-  app.get('/proficiencies', (req, res) => {
-    res.render('proficiencies');
+app.get('/proficiencies', (req, res) => {
+    let query1 = "SELECT id_proficiency AS 'Proficiency_ID', proficiency_name AS 'Proficiency_Name' FROM Proficiencies ORDER BY id_proficiency ASC;";
+    db.pool.query(query1, function(error, rows, fields){
+        let proficiencies = rows;
+        return res.render('proficiencies', {proficiencies: proficiencies});})
+    
   });
 
 app.get('/students', function(req, res)
@@ -114,6 +118,35 @@ app.post('/add-student-ajax', function(req, res)
     })
 });  
 
+app.post('/add-proficiency-form', function(req, res){
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+
+    // Capture NULL values
+    let id = data['input-id'];
+
+    let name = data['input-name'];
+    // Create the query and run it on the database
+    query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES ('${data['input-id']}', '${data['input-name']}')`;
+    db.pool.query(query1, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+
+        // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
+        // presents it on the screen
+        else
+        {
+            res.redirect('/proficiencies');
+        }
+    })
+})
+
 app.delete('/delete-student-ajax/', function(req,res,next){
     let data = req.body;
     let studentID = parseInt(data.id_student);
@@ -131,6 +164,24 @@ app.delete('/delete-student-ajax/', function(req,res,next){
     })
   });
 
+  app.delete('/delete-proficiency-ajax/', function(req,res,next){
+    let data = req.body;
+    let proficiencyID = data.Proficiency_ID;
+    let delete_Proficiency = `DELETE FROM Proficiencies WHERE id_proficiency = ?`;
+  
+          // Run the 1st query
+          db.pool.query(delete_Proficiency, [proficiencyID], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              else {
+                res.sendStatus(204);
+            }
+  })});
 app.put('/put-student-ajax', function(req,res,next){
     let data = req.body;
 
