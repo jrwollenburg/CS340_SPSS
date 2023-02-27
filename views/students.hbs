@@ -82,10 +82,10 @@
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="./js/add_student.js"></script>
 
-<h2>Update a Student</h2>
-<p>To update a specific Student, select their name from the drop down menu.</p>
+<!-- UPDATE FUNCTIONALITY -->
+<h2>Updating A Student</h2>
+<p>To update a student's proficiency, select the student from the drop down and the new profiency. You can select blank for null.</p>
 <form id="update-student-form-ajax">
-
     <label for="input-fullname">Full name: </label>
     <select name="input-fullname" id="mySelect">
         <option value="test">Select a Student</option>
@@ -94,9 +94,9 @@
         {{/each}}
     </select>
 
-    <label for="input-proficiency">Proficiency: </label>
+    <label for="input-proficiency">Homeworld: </label>
     <select name="input-proficiency" id="input-proficiency-update">
-        <option></option>
+        <option>Select a Proficiency</option>
         {{#each proficiencies}}
         <option value="{{this.id_proficiency}}">{{this.proficiency_name}}</option>
         {{/each}}

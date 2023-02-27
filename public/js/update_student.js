@@ -15,11 +15,20 @@ updateStudentForm.addEventListener("submit", function (e) {
     // Get the values from the form fields
     let fullNameValue = inputFullName.value;
     let proficiencyValue = inputProficiency.value;
+    
+    // currently the database table for bsg_people does not allow updating values to NULL
+    // so we must abort if being bassed NULL for homeworld
+
+    if (proficiencyValue === '')
+    {
+        proficiencyValue = null;
+    }
+
 
     // Put our data we want to send in a javascript object
     let data = {
         fullname: fullNameValue,
-        idpproficiency: proficiencyValue,
+        proficiency: proficiencyValue,
     }
     
     // Setup our AJAX request
@@ -56,14 +65,14 @@ function updateRow(data, studentID){
        //rows would be accessed using the "row" variable assigned in the for loop
        if (table.rows[i].getAttribute("data-value") == studentID) {
 
-            // Get the location of the row where we found the matching student ID
+            // Get the location of the row where we found the matching person ID
             let updateRowIndex = table.getElementsByTagName("tr")[i];
 
             // Get td of homeworld value
             let td = updateRowIndex.getElementsByTagName("td")[1];
 
             // Reassign homeworld to our value we updated to
-            td.innerHTML = parsedData[0].id_proficiency; 
+            td.innerHTML = parsedData[0].name; 
        }
     }
 }
