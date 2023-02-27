@@ -164,24 +164,6 @@ app.delete('/delete-student-ajax/', function(req,res,next){
     })
   });
 
-  app.delete('/delete-proficiency-ajax/', function(req,res,next){
-    let data = req.body;
-    let proficiencyID = data.Proficiency_ID;
-    let delete_Proficiency = `DELETE FROM Proficiencies WHERE id_proficiency = ?`;
-  
-          // Run the 1st query
-          db.pool.query(delete_Proficiency, [proficiencyID], function(error, rows, fields){
-              if (error) {
-  
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-              console.log(error);
-              res.sendStatus(400);
-              }
-  
-              else {
-                res.sendStatus(204);
-            }
-  })});
 app.put('/put-student-ajax', function(req,res,next){
     let data = req.body;
 
