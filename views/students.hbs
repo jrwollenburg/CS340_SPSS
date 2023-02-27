@@ -88,7 +88,7 @@
 <form id="update-student-form-ajax">
     <label for="input-fullname">Full name: </label>
     <select name="input-fullname" id="mySelect">
-        <option value="test">Select a Student</option>
+        <option value="dontpick">Select a Student</option>
         {{#each data}}
         <option value="{{this.id_student}}">{{this.student_fname}} {{this.student_lname}}</option>
         {{/each}}
@@ -96,7 +96,7 @@
 
     <label for="input-proficiency">Homeworld: </label>
     <select name="input-proficiency" id="input-proficiency-update">
-        <option>Select a Proficiency</option>
+        <option value=null></option>
         {{#each proficiencies}}
         <option value="{{this.id_proficiency}}">{{this.proficiency_name}}</option>
         {{/each}}

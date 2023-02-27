@@ -164,6 +164,41 @@ app.delete('/delete-student-ajax/', function(req,res,next){
     })
   });
 
+  app.put('/put-student-ajax', function(req,res,next){
+    let data = req.body;
+  
+    let proficiency = data.proficiency;
+    let student = parseInt(data.fullname);
+    if (proficiency === 'null'){
+        proficiency = null}
+    let queryUpdateProficiency = `UPDATE Students SET id_proficiency = ? WHERE Students.id_student = ?`;
+    let selectProficiency = `SELECT * FROM Proficiencies WHERE id_proficiency = ?`
+    
+          // Run the 1st query
+          db.pool.query(queryUpdateProficiency, [proficiency, student], function(error, rows, fields){
+              if (error) {
+  
+              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+              console.log(error);
+              res.sendStatus(400);
+              }
+  
+              // If there was no error, we run our second query and return that data so we can use it to update the people's
+              // table on the front-end
+              else
+              {
+                  // Run the second query
+                  db.pool.query(selectProficiency, [proficiency], function(error, rows, fields) {
+  
+                      if (error) {
+                          console.log(error);
+                          res.sendStatus(400);
+                      } else {
+                          res.send(rows);
+                      }
+                  })
+              }
+  })});
 /*
     LISTENER
 */
