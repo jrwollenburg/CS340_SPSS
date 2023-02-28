@@ -1,0 +1,35 @@
+body {
+    background-color: lightblue;
+  }
+
+#navbar {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+/* Links */
+#navbar a {
+    display: inline-block;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #ab09bd;
+    color: #caeb11;
+    text-decoration: none;
+    margin-right: 1rem;
+}
+
+/* active link */
+#navbar a.active {
+}
+
+/* Stack the navbar links on smaller screens */
+@media screen and (max-width: 768px) {
+#navbar {
+    flex-direction: column;
+    align-items: center;
+}
+}
