@@ -26,7 +26,7 @@ body {
 #navbar a.active {
 }
 
-/* Stack the navbar links on smaller screens */
+/* buttons stack */
 @media screen and (max-width: 768px) {
 #navbar {
     flex-direction: column;
