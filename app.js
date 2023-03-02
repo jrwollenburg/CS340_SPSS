@@ -1,4 +1,11 @@
 // App.js
+/*  CODE CITATION:
+    Date: 03/02/2023
+    This code was developed from the NodeJS Starter App Walkthrough. 
+    Several functions throughout the app are adapted from:
+    Source: https://github.com/osu-cs340-ecampus/nodejs-starter-app
+*/
+
 
 /*
     SETUP
