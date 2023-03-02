@@ -41,6 +41,7 @@
 <!-- /views/index.hbs -->
 
 {{!-- Form to add a record to the table  --}}
+<div id="add-student">
 <h2>Add a Student</h2>
 <p>To add a new student, please enter their information below and click 'Submit'!</p>
 <form id="add-student-form-ajax">
@@ -75,13 +76,14 @@
         <option default value="Yes">Yes</option>
         <option value="No">No</option>
     </select>
-
+    <div></div>
     <input type="submit">
 </form>
-
+</div>
 {{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
 <script src="./js/add_student.js"></script>
 
+<div id = "updating-student">
 <!-- UPDATE FUNCTIONALITY -->
 <h2>Updating A Student</h2>
 <p>To update a student's proficiency, select the student from the drop down and the new profiency. You can select blank for null.</p>
@@ -102,7 +104,7 @@
         {{/each}}
     </select>
     <input type="submit">
-
+</div>
 </form>
 
 <script src="./js/update_student.js"></script>
