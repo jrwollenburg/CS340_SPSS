@@ -23,16 +23,16 @@
 
         {{#each data}}
         <tr>
-            <td>{{this.id_student}}</td>
-            <td>{{this.id_proficiency}}</td>
-            <td>{{this.student_fname}}</td>
-            <td>{{this.student_lname}}</td>
-            <td>{{this.student_phone_number}}</td>
-            <td>{{this.emergency_fname}}</td>
-            <td>{{this.emergency_lname}}</td>
-            <td>{{this.emergency_phone}}</td>
-            <td>{{this.waiver_signed}}</td>
-            <td><button onclick="deleteStudent({{this.id_student}})">Delete</button></td>
+            <td>{{this.Student_ID}}</td>
+            <td>{{this.Proficiency_ID}}</td>
+            <td>{{this.First_Name}}</td>
+            <td>{{this.Last_Name}}</td>
+            <td>{{this.Phone_Number}}</td>
+            <td>{{this.Emergency_Contact_First_Name}}</td>
+            <td>{{this.Emergency_Contact_Last_Name}}</td>
+            <td>{{this.Emergency_Contact_Number}}</td>
+            <td>{{this.Waiver_Signed}}</td>
+            <td><button onclick="deleteStudent({{this.Student_ID}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>
@@ -90,7 +90,7 @@
     <select name="input-fullname" id="mySelect">
         <option value="dontpick">Select a Student</option>
         {{#each data}}
-        <option value="{{this.id_student}}">{{this.student_fname}} {{this.student_lname}}</option>
+        <option value="{{this.Student_ID}}">{{this.First_Name}} {{this.Last_Name}}</option>
         {{/each}}
     </select>
 

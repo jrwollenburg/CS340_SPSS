@@ -1,7 +1,7 @@
-function deleteStudent(id_student) {
+function deleteStudent(Student_ID) {
     // Put our data we want to send in a javascript object
     let data = {
-        id_student: id_student
+        Student_ID: Student_ID
     };
 
     // Setup our AJAX request
@@ -14,7 +14,7 @@ function deleteStudent(id_student) {
         if (xhttp.readyState == 4 && xhttp.status == 204) {
 
             // Add the new data to the table
-            deleteRow(id_student);
+            deleteRow(Student_ID);
             location.reload();
         }
         else if (xhttp.readyState == 4 && xhttp.status != 204) {
@@ -26,24 +26,24 @@ function deleteStudent(id_student) {
 }
 
 
-function deleteRow(id_student){
+function deleteRow(Student_ID){
 
     let table = document.getElementById("students-table");
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
-       if (table.rows[i].getAttribute("data-value") == id_student) {
+       if (table.rows[i].getAttribute("data-value") == Student_ID) {
             table.deleteRow(i);
-            deleteDropDownMenu(id_student);
+            deleteDropDownMenu(Student_ID);
             break;
        }
     }
 }
 
-function deleteDropDownMenu(id_student){
+function deleteDropDownMenu(Student_ID){
     let selectMenu = document.getElementById("mySelect");
     for (let i = 0; i < selectMenu.length; i++){
-      if (Number(selectMenu.options[i].value) === Number(id_student)){
+      if (Number(selectMenu.options[i].value) === Number(Student_ID)){
         selectMenu[i].remove();
         break;
     } 

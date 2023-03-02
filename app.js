@@ -54,7 +54,7 @@ app.get('/proficiencies', (req, res) => {
 
 app.get('/students', function(req, res)
     {
-      let query1 = "SELECT * FROM Students;";
+      let query1 = "SELECT id_student as 'Student_ID', id_proficiency as 'Proficiency_ID', student_fname as 'First_Name', student_lname as 'Last_Name', student_phone_number as 'Phone_Number', emergency_fname as 'Emergency_Contact_First_Name', emergency_lname as 'Emergency_Contact_Last_Name', emergency_phone as 'Emergency_Contact_Number', waiver_signed as 'Waiver_Signed' FROM Students;";
       let query2 = "SELECT * FROM Proficiencies;";
       db.pool.query(query1, function(error, rows, fields){
         
@@ -157,7 +157,7 @@ app.post('/add-proficiency-form', function(req, res){
 
 app.delete('/delete-student-ajax/', function(req,res,next){
     let data = req.body;
-    let studentID = parseInt(data.id_student);
+    let studentID = parseInt(data.Student_ID);
     let deleteStudents= `DELETE FROM Students WHERE id_student = ?`;
   
     // Delete of student will cascade

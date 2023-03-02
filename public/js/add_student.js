@@ -29,13 +29,13 @@ addStudentForm.addEventListener("submit", function (e) {
 
     // Put our data we want to send in a javascript object
     let data = {
-        id_proficiency: proficiencyValue,
-        student_fname: firstNameValue,
-        student_lname: lastNameValue,
-        student_phone_number: phoneValue,
-        emergency_fname: emerFirstValue,
-        emergency_lname: emerLastValue,
-        emergency_phone: emerPhoneValue,
+        Proficiency_ID: proficiencyValue,
+        First_Name: firstNameValue,
+        Last_Name: lastNameValue,
+        Phone_Number: phoneValue,
+        Emergency_Contact_First_Name: emerFirstValue,
+        Emergency_Contact_Last_Name: emerLastValue,
+        Emergency_Contact_Number: emerPhoneValue,
         waiver_signed: waiverValue
     }
     
@@ -100,19 +100,19 @@ addRowToTable = (data) => {
     let waiverCell = document.createElement("TD");
     let deleteCell = document.createElement("TD");
     // Fill the cells with correct data
-    idCell.innerText = newRow.id_student;
-    profCell.innerText = newRow.id_proficiency;
-    firstNameCell.innerText = newRow.student_fname;
-    lastNameCell.innerText = newRow.student_lname;
-    phoneCell.innerText = newRow.student_phone_number;
-    emerFirstCell.innerText = newRow.emergency_fname;
-    emerLastCell.innerText = newRow.emergency_lname;
-    emerPhoneCell.innerText = newRow.emergency_phone;
+    idCell.innerText = newRow.Student_ID;
+    profCell.innerText = newRow.Proficiency_ID;
+    firstNameCell.innerText = newRow.First_Name;
+    lastNameCell.innerText = newRow.Last_Name;
+    phoneCell.innerText = newRow.Phone_Number;
+    emerFirstCell.innerText = newRow.Emergency_Contact_First_Name;
+    emerLastCell.innerText = newRow.Emergency_Contact_Last_Name;
+    emerPhoneCell.innerText = newRow.Emergency_Contact_Number;
     waiverCell.innerText = newRow.waiver_signed;
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";
     deleteCell.onclick = function(){
-        deleteStudent(newRow.id_student); // Won't refresh old data added before opening app
+        deleteStudent(newRow.Student_ID); // Won't refresh old data added before opening app
     };
     // Add the cells to the row 
     row.appendChild(idCell);
@@ -126,7 +126,7 @@ addRowToTable = (data) => {
     row.appendChild(waiverCell);
     row.appendChild(deleteCell);
     // Add a row attribute so the deleteRow function can find a newly added row
-    row.setAttribute('data-value', newRow.id_student);
+    row.setAttribute('data-value', newRow.Student_ID);
     // Add the row to the table
     currentTable.appendChild(row);
 
@@ -134,8 +134,8 @@ addRowToTable = (data) => {
     // then append option to drop down menu so newly created rows via ajax will be found in it without needing a refresh
     let selectMenu = document.getElementById("mySelect");
     let option = document.createElement("option");
-    option.text = newRow.student_fname + ' ' +  newRow.student_lname;
-    option.value = newRow.id_student;
+    option.text = newRow.First_Name + ' ' +  newRow.Last_Name;
+    option.value = newRow.Student_ID;
     selectMenu.add(option);
     // End of new step 8 code.
 }
