@@ -23,16 +23,16 @@
 
         {{#each data}}
         <tr>
-            <td>{{this.Student_ID}}</td>
-            <td>{{this.Proficiency_ID}}</td>
-            <td>{{this.First_Name}}</td>
-            <td>{{this.Last_Name}}</td>
-            <td>{{this.Phone_Number}}</td>
-            <td>{{this.Emergency_Contact_First_Name}}</td>
-            <td>{{this.Emergency_Contact_Last_Name}}</td>
-            <td>{{this.Emergency_Contact_Number}}</td>
-            <td>{{this.Waiver_Signed}}</td>
-            <td><button onclick="deleteStudent({{this.Student_ID}})">Delete</button></td>
+            <td>{{this.[Student ID]}}</td>
+            <td>{{this.[Proficiency ID]}}</td>
+            <td>{{this.[First Name]}}</td>
+            <td>{{this.[Last Name]}}</td>
+            <td>{{this.[Phone Number]}}</td>
+            <td>{{this.[Emergency Contact First_Name]}}</td>
+            <td>{{this.[Emergency Contact Last_Name]}}</td>
+            <td>{{this.[Emergency Contact Number]}}</td>
+            <td>{{this.[Waiver Signed]}}</td>
+            <td><button onclick="deleteStudent({{this.[Student ID]}})">Delete</button></td>
         </tr>
         {{/each}}
     </tbody>
@@ -85,14 +85,14 @@
 
 <div id = "updating-student">
 <!-- UPDATE FUNCTIONALITY -->
-<h2>Updating A Student</h2>
+<h2>Updating a Student</h2>
 <p>To update a student's proficiency, select the student from the drop down and the new profiency. You can select blank for null.</p>
 <form id="update-student-form-ajax">
     <label for="input-fullname">Full name: </label>
     <select name="input-fullname" id="mySelect">
         <option value="dontpick">Select a Student</option>
         {{#each data}}
-        <option value="{{this.Student_ID}}">{{this.First_Name}} {{this.Last_Name}}</option>
+        <option value="{{this.[Student ID]}}">{{this.[First Name]}} {{this.[Last Name]}}</option>
         {{/each}}
     </select>
 

@@ -45,7 +45,7 @@ app.get('/lessons', (req, res) => {
   });
 
 app.get('/proficiencies', (req, res) => {
-    let query1 = "SELECT id_proficiency AS 'Proficiency_ID', proficiency_name AS 'Proficiency_Name' FROM Proficiencies ORDER BY id_proficiency ASC;";
+    let query1 = "SELECT id_proficiency AS 'Proficiency ID', proficiency_name AS 'Proficiency Name' FROM Proficiencies ORDER BY id_proficiency ASC;";
     db.pool.query(query1, function(error, rows, fields){
         let proficiencies = rows;
         return res.render('proficiencies', {proficiencies: proficiencies});})
@@ -54,7 +54,7 @@ app.get('/proficiencies', (req, res) => {
 
 app.get('/students', function(req, res)
     {
-      let query1 = "SELECT id_student as 'Student_ID', id_proficiency as 'Proficiency_ID', student_fname as 'First_Name', student_lname as 'Last_Name', student_phone_number as 'Phone_Number', emergency_fname as 'Emergency_Contact_First_Name', emergency_lname as 'Emergency_Contact_Last_Name', emergency_phone as 'Emergency_Contact_Number', waiver_signed as 'Waiver_Signed' FROM Students;";
+      let query1 = "SELECT id_student as 'Student ID', id_proficiency as 'Proficiency ID', student_fname as 'First Name', student_lname as 'Last Name', student_phone_number as 'Phone Number', emergency_fname as 'Emergency Contact First Name', emergency_lname as 'Emergency Contact Last Name', emergency_phone as 'Emergency Contact Number', waiver_signed as 'Waiver Signed' FROM Students;";
       let query2 = "SELECT * FROM Proficiencies;";
       db.pool.query(query1, function(error, rows, fields){
         
