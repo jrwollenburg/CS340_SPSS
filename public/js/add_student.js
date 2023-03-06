@@ -29,14 +29,14 @@ addStudentForm.addEventListener("submit", function (e) {
 
     // Put our data we want to send in a javascript object
     let data = {
-        Proficiency_ID: proficiencyValue,
-        First_Name: firstNameValue,
-        Last_Name: lastNameValue,
-        Phone_Number: phoneValue,
-        Emergency_Contact_First_Name: emerFirstValue,
-        Emergency_Contact_Last_Name: emerLastValue,
-        Emergency_Contact_Number: emerPhoneValue,
-        waiver_signed: waiverValue
+        'Proficiency ID': proficiencyValue,
+        'First Name': firstNameValue,
+        'Last Name': lastNameValue,
+        'Phone Number': phoneValue,
+        'Emergency Contact First Name': emerFirstValue,
+        'Emergency Contact Last Name': emerLastValue,
+        'Emergency Contact Number': emerPhoneValue,
+        'Waiver Signed': waiverValue
     }
     
     // Setup our AJAX request
@@ -49,7 +49,6 @@ addStudentForm.addEventListener("submit", function (e) {
         if (xhttp.readyState == 4 && xhttp.status == 200) {
 
             // Add the new data to the table
-
             addRowToTable(xhttp.response);
             location.reload();
             // Clear the input fields for another transaction

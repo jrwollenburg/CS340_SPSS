@@ -74,22 +74,22 @@ app.post('/add-student-ajax', function(req, res)
 {
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
-
+    console.log(data)
     // Capture NULL values and use the right query -- only way I could get it working
-    let waiver_signed = data.waiver_signed;
+    let waiver_signed = data[`Waiver Signed`];
     if (waiver_signed === "Yes"){
         waiver_signed = 1;
     } else {
         waiver_signed = 0;
     }
 
-    let proficiency_value = data.id_proficiency;
+    let proficiency_value = data[`Proficiency ID`];
     if (proficiency_value === ""){
         proficiency_value = null
-        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (${proficiency_value}, '${data.student_fname}', '${data.student_lname}', '${data.student_phone_number}', '${data.emergency_fname}', '${data.emergency_lname}', '${data.emergency_phone}', ${waiver_signed})`;
+        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (${proficiency_value}, '${data[`First Name`]}', '${data[`Last Name`]}', '${data[`Phone Number`]}', '${data[`Emergency Contact First Name`]}', '${data[`Emergency Contact Last Name`]}', '${data[`Emergency Contact Number`]}', ${waiver_signed})`;
     }
     else{
-        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES ('${proficiency_value}', '${data.student_fname}', '${data.student_lname}', '${data.student_phone_number}', '${data.emergency_fname}', '${data.emergency_lname}', '${data.emergency_phone}', ${waiver_signed})`;
+        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES ('${proficiency_value}', '${data[`First Name`]}', '${data[`Last Name`]}', '${data[`Phone Number`]}', '${data[`Emergency Contact First Name`]}', '${data[`Emergency Contact Last Name`]}', '${data[`Emergency Contact Number`]}', ${waiver_signed})`;
     }
 
     // Create the query and run it on the database
