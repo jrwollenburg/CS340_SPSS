@@ -86,7 +86,7 @@ app.post('/add-student-ajax', function(req, res)
         data["Emergency Contact Number"] || null,
         data["Waiver Signed"] || null
     ];
-
+    // waiver signed is sent as yes/no so conver that to the appropriate format of 1/0.
     let waiver_signed = data[`Waiver Signed`];
     if (waiver_signed === "Yes"){
         waiver_signed = 1;
