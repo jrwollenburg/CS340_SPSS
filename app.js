@@ -137,13 +137,20 @@ app.post('/add-proficiency-form', function(req, res){
     let id = data['input-id'];
 
     let name = data['input-name'];
+    // If either is null its a bad request, so just null both and send that so the error occurs.
+    if (id === '' || name === ''){
+        id = null
+        name = null
+        query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES (${id}, ${name})`;
+    } else {
+        query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES ('${data['input-id']}', '${data['input-name']}')`;
+    }
     // Create the query and run it on the database
-    query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES ('${data['input-id']}', '${data['input-name']}')`;
+    
     db.pool.query(query1, function(error, rows, fields){
 
         // Check to see if there was an error
         if (error) {
-
             // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
             res.sendStatus(400);
