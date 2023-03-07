@@ -74,27 +74,30 @@ app.post('/add-student-ajax', function(req, res)
 {
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
-    console.log(data)
-    // Capture NULL values and use the right query -- only way I could get it working
+
+    // converting to nulls where needed to prevent the empty string bug
+    const values = [
+        data["Proficiency ID"] || null,
+        data["First Name"] || null,
+        data["Last Name"] || null,
+        data["Phone Number"] || null,
+        data["Emergency Contact First Name"] || null,
+        data["Emergency Contact Last Name"] || null,
+        data["Emergency Contact Number"] || null,
+        data["Waiver Signed"] || null
+    ];
+
     let waiver_signed = data[`Waiver Signed`];
     if (waiver_signed === "Yes"){
         waiver_signed = 1;
     } else {
         waiver_signed = 0;
     }
-
-    let proficiency_value = data[`Proficiency ID`];
-    if (proficiency_value === ""){
-        proficiency_value = null
-        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (${proficiency_value}, '${data[`First Name`]}', '${data[`Last Name`]}', '${data[`Phone Number`]}', '${data[`Emergency Contact First Name`]}', '${data[`Emergency Contact Last Name`]}', '${data[`Emergency Contact Number`]}', ${waiver_signed})`;
-    }
-    else{
-        query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES ('${proficiency_value}', '${data[`First Name`]}', '${data[`Last Name`]}', '${data[`Phone Number`]}', '${data[`Emergency Contact First Name`]}', '${data[`Emergency Contact Last Name`]}', '${data[`Emergency Contact Number`]}', ${waiver_signed})`;
-    }
-
+    const query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    
     // Create the query and run it on the database
     
-    db.pool.query(query1, function(error, rows, fields){
+    db.pool.query(query1, values, function(error, rows, fields){
 
         // Check to see if there was an error
         if (error) {
