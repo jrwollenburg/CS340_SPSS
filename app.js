@@ -75,6 +75,9 @@ app.post('/add-student-ajax', function(req, res)
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
 
+    let waiver_signed = data["Waiver Signed"];
+    
+    
     // converting to nulls where needed to prevent the empty string bug
     const values = [
         data["Proficiency ID"] || null,
@@ -83,22 +86,20 @@ app.post('/add-student-ajax', function(req, res)
         data["Phone Number"] || null,
         data["Emergency Contact First Name"] || null,
         data["Emergency Contact Last Name"] || null,
-        data["Emergency Contact Number"] || null,
-        data["Waiver Signed"] || null
+        data["Emergency Contact Number"] || null
     ];
     // waiver signed is sent as yes/no so conver that to the appropriate format of 1/0.
-    let waiver_signed = data[`Waiver Signed`];
     if (waiver_signed === "Yes"){
         waiver_signed = 1;
     } else {
         waiver_signed = 0;
     }
-    const query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (?, ?, ?, ?, ?, ?, ?, ${waiver_signed})`;
     
     // Create the query and run it on the database
     
     db.pool.query(query1, values, function(error, rows, fields){
-
+        console.log(values)
         // Check to see if there was an error
         if (error) {
 
@@ -184,9 +185,10 @@ app.delete('/delete-student-ajax/', function(req,res,next){
 
   app.put('/put-student-ajax', function(req,res,next){
     let data = req.body;
-  
+
     let proficiency = data.proficiency;
     let student = parseInt(data.fullname);
+    
     if (proficiency === 'null'){
         proficiency = null}
     let queryUpdateProficiency = `UPDATE Students SET id_proficiency = ? WHERE Students.id_student = ?`;
@@ -194,8 +196,8 @@ app.delete('/delete-student-ajax/', function(req,res,next){
     
           // Run the 1st query
           db.pool.query(queryUpdateProficiency, [proficiency, student], function(error, rows, fields){
+
               if (error) {
-  
               // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
               console.log(error);
               res.sendStatus(400);
@@ -212,6 +214,7 @@ app.delete('/delete-student-ajax/', function(req,res,next){
                           console.log(error);
                           res.sendStatus(400);
                       } else {
+                          console.log(rows)
                           res.send(rows);
                       }
                   })

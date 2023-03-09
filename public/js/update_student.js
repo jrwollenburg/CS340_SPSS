@@ -30,7 +30,6 @@ updateStudentForm.addEventListener("submit", function (e) {
         fullname: fullNameValue,
         proficiency: proficiencyValue,
     }
-    
     // Setup our AJAX request
     var xhttp = new XMLHttpRequest();
     xhttp.open("PUT", "/put-student-ajax", true);
@@ -57,14 +56,14 @@ updateStudentForm.addEventListener("submit", function (e) {
 
 function updateRow(data, studentID){
     let parsedData = JSON.parse(data);
-    
+
     let table = document.getElementById("students-table");
 
     for (let i = 0, row; row = table.rows[i]; i++) {
        //iterate through rows
        //rows would be accessed using the "row" variable assigned in the for loop
        if (table.rows[i].getAttribute("data-value") == studentID) {
-
+            
             // Get the location of the row where we found the matching person ID
             let updateRowIndex = table.getElementsByTagName("tr")[i];
 
@@ -72,7 +71,10 @@ function updateRow(data, studentID){
             let td = updateRowIndex.getElementsByTagName("td")[1];
 
             // Reassign homeworld to our value we updated to
-            td.innerHTML = parsedData[0].name; 
+            if (parsedData.length === 0){
+                td.innerHTML = null} 
+            else{
+                td.innerHTML = parsedData[0].name;} 
        }
     }
 }
