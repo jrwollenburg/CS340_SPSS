@@ -161,3 +161,9 @@ h2 {
     border: 1px solid #ddd;
     border-radius: 3px;
 }
+
+footer {
+    width: 100%;
+    text-align: center;
+    padding-top: 5%;
+}
