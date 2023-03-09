@@ -216,17 +216,16 @@ app.post('/add-proficiency-form', function(req, res){
         if (error) {
             // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
             console.log(error)
-            res.sendStatus(400);
+            //res.status(400).send('An error has occurred. You may have entered duplicate or null data. Please refresh and try again.');
+            res.status(400).redirect('/proficiencies');
         }
 
-        // If there was no error, we redirect back to our root route, which automatically runs the SELECT * FROM bsg_people and
-        // presents it on the screen
         else
         {
             res.redirect('/proficiencies');
         }
     })
-})
+});
 
 app.delete('/delete-student-ajax/', function(req,res,next){
     let data = req.body;
@@ -244,6 +243,23 @@ app.delete('/delete-student-ajax/', function(req,res,next){
         }
     })
   });
+
+app.delete('/delete-instructor-ajax/', function(req,res,next){
+    let data = req.body;
+    let instructorID = parseInt(data.Instructor_ID);
+    let deleteInstructors = `DELETE FROM Instructors WHERE id_instructor = ?`;
+
+// Delete of student will cascade
+db.pool.query(deleteInstructors, [instructorID], function(error, rows, fields) {
+
+    if (error) {
+        console.log(error);
+        res.sendStatus(400);
+    } else {
+        res.sendStatus(204);
+    }
+})
+});
 
   app.put('/put-student-ajax', function(req,res,next){
     let data = req.body;

@@ -84,6 +84,7 @@ background-color: #ddd;
     border: 1px solid #ddd;
     border-radius: 3px;
 }
+
 #add-student input[type="submit"] {
     width: 100%;
     padding: 6px;
@@ -103,4 +104,60 @@ background-color: #ddd;
 
 h2 {
     margin: 0 auto;
+}
+
+/*for instructors form*/
+#add-instructor {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+#add-instructor label {
+    display: block;
+    margin-bottom: 5px;
+}
+#add-instructor input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#add-instructor input[type="submit"] {
+    width: 100%;
+    padding: 6px;
+    margin: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+/*for proficiencies form*/
+#add-skill {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+#add-skill label {
+    display: block;
+    margin-bottom: 5px;
+}
+#add-skill input[type="text"] {
+    width: 25%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#add-skill input[type="submit"] {
+    width: 100%;
+    padding: 6px;
+    margin: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
 }
