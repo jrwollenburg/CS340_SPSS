@@ -50,7 +50,7 @@ addStudentForm.addEventListener("submit", function (e) {
 
             // Add the new data to the table
             addRowToTable(xhttp.response);
-            //location.reload();
+            location.reload(); // just having this here as a workaround for the CSS issue
             // Clear the input fields for another transaction
             inputProficiency.value = '';
             inputFirstName.value = '';
@@ -72,8 +72,6 @@ addStudentForm.addEventListener("submit", function (e) {
 })
 
 
-// Creates a single row from an Object representing a single record from 
-// bsg_people
 addRowToTable = (data) => {
 
     // Get a reference to the current table on the page and clear it out.
@@ -111,7 +109,7 @@ addRowToTable = (data) => {
     deleteCell = document.createElement("button");
     deleteCell.innerHTML = "Delete";
     deleteCell.onclick = function(){
-        deleteStudent(newRow.id_student); // Won't refresh old data added before opening app
+        deleteStudent(newRow.id_student);
     };
     // Add the cells to the row 
     row.appendChild(idCell);

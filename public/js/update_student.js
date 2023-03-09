@@ -41,7 +41,7 @@ updateStudentForm.addEventListener("submit", function (e) {
 
             // Add the new data to the table
             updateRow(xhttp.response, fullNameValue);
-            location.reload(); //force refresh
+            location.reload()
         }
         else if (xhttp.readyState == 4 && xhttp.status != 200) {
             console.log("There was an error with the input.")
@@ -72,9 +72,9 @@ function updateRow(data, studentID){
 
             // Reassign homeworld to our value we updated to
             if (parsedData.length === 0){
-                td.innerHTML = null} 
+                td.innerHTML = null;} 
             else{
-                td.innerHTML = parsedData[0].name;} 
+                td.innerHTML = parsedData[0].id_proficiency;} 
        }
     }
 }

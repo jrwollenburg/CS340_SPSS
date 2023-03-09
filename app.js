@@ -32,9 +32,17 @@ app.get('/index', (req, res) => {
     res.render('index');
   });
 
-app.get('/instructors', (req, res) => {
-    res.render('instructors');
-  });
+app.get('/instructors', function(req, res)
+{
+    let query1 = "SELECT id_instructor as 'Instructor ID', instructor_fname as 'First Name', instructor_lname as 'Last Name', instructor_phone_number as 'Phone Number', years_of_experience as 'Years of Experience', first_aid_certified as 'First Aid Certified' FROM Instructors;";
+    
+    
+    // Run the second query
+    db.pool.query(query1, function(error, rows, fields){
+        let instructors = rows;
+        return res.render('instructors', {data: instructors});
+    })
+});
 
 app.get('/student-registrations', (req, res) => {
     res.render('studentregistrations');
@@ -130,6 +138,60 @@ app.post('/add-student-ajax', function(req, res)
     })
 });  
 
+app.post('/add-instructor-ajax', function(req, res)
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+    let first_aid_certified = data["First Aid Certified"]
+    // Converting to nulls where needed to prevent the empty string bug
+    const values = [
+        data["First Name"] || null,
+        data["Last Name"] || null,
+        data["Phone Number"] || null,
+        data["Years of Experience"] || null,
+    ];
+
+    if (first_aid_certified === "Yes"){
+        first_aid_certified = 1;
+    } else {
+        first_aid_certified = 0;
+    }
+
+    const query1 = `INSERT INTO Instructors (instructor_fname, instructor_lname, instructor_phone_number, years_of_experience, first_aid_certified) VALUES (?, ?, ?, ?, ${first_aid_certified})`;
+
+    // Create the query and run it on the database
+    db.pool.query(query1, values, function(error, rows, fields){
+
+        // Check to see if there was an error
+        if (error) {
+
+        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on Instructors
+            query2 = `SELECT * FROM Instructors;`;
+            db.pool.query(query2, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});
+
 app.post('/add-proficiency-form', function(req, res){
     // Capture the incoming data and parse it back to a JS object
     let data = req.body;
@@ -214,7 +276,6 @@ app.delete('/delete-student-ajax/', function(req,res,next){
                           console.log(error);
                           res.sendStatus(400);
                       } else {
-                          console.log(rows)
                           res.send(rows);
                       }
                   })

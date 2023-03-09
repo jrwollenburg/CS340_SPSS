@@ -1,1 +1,68 @@
 <h1>Instructors at Slashing Pow Ski School</h1>
+<table id = "instructors-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the pem_fname renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{#each data}}
+        <tr>
+            <td>{{this.[Instructor ID]}}</td>
+            <td>{{this.[First Name]}}</td>
+            <td>{{this.[Last Name]}}</td>
+            <td>{{this.[Phone Number]}}</td>
+            <td>{{this.[Years of Experience]}}</td>
+            <td>{{this.[First Aid Certified]}}</td>
+            <td><button onclick="deleteInstructor({{this.[Instructor ID]}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_instructor.js"></script>
+
+{{!-- Form to add a record to the table  --}}
+<div id="add-instructor">
+
+<h2>Add an Instructor</h2>
+<p>To add an Instructor, please enter their information below and click 'Submit'!</p>
+<form id="add-instructor-form-ajax">
+    <label for="input-fname">First Name: </label>
+    <input type="text" name="input-fname" id="input-fname">
+    
+    <label for="input-lname">Last Name: </label>
+    <input type="text" name="input-lname" id="input-lname">
+
+    <label for="input-phone">Phone Number: </label>
+    <input type="text" name="input-phone" id="input-phone">
+
+    <label for="input-years-experience">Years of Experience: </label>
+    <input type="text" name="input-years" id="input-years">
+
+    <label for="input-first-aid">First Aid Certified: </label>
+    <select type="select" name="input-first-aid" id="input-first-aid">
+        <option default value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+
+    <input type="submit">
+</form>
+</div>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_instructor.js"></script>
