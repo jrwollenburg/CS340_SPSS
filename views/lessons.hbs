@@ -1,1 +1,35 @@
 <h1>Lessons Available</h1>
+{{!-- Create a table --}}
+<table id = "lessons-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the pem_fname renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>Delete</th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{#each data}}
+        <tr>
+            <td>{{this.[Lesson ID]}}</td>
+            <td>{{this.[Lesson Name]}}</td>
+            <td>{{this.[Proficiency Level]}}</td>
+            <td>{{this.[Instructor]}}</td>
+            <td><button onclick="deleteLesson({{this.[Lesson ID]}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<!-- <script src="./js/delete_lesson.js"></script> -->
+<!-- /views/index.hbs -->

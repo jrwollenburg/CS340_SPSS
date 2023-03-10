@@ -49,7 +49,11 @@ app.get('/student-registrations', (req, res) => {
   });
 
 app.get('/lessons', (req, res) => {
-    res.render('lessons');
+    let query1 = "SELECT id_lesson AS 'Lesson ID', lesson_name AS 'Lesson Name', id_proficiency AS 'Proficiency Level', CONCAT(instructor_fname, ' ', instructor_lname) AS 'Instructor' FROM `Lessons` join Instructors on Instructors.id_instructor = Lessons.id_instructor;";
+    db.pool.query(query1, function(error, rows, fields){
+        let lessons = rows;
+        return res.render('lessons', {data: lessons});
+    })
   });
 
 app.get('/proficiencies', (req, res) => {
