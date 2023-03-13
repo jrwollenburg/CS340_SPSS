@@ -36,7 +36,7 @@ addLessonForm.addEventListener("submit", function (e) {
             
             // Add the new data to the table
             addRowToTable(xhttp.response);
-            //location.reload(); // just having this here as a workaround for the CSS issue
+            location.reload(); // just having this here as a workaround for the CSS issue
             // Clear the input fields for another transaction
             inputLessonName.value = '';
             inputLessonProficiency.value = '';
