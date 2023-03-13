@@ -50,9 +50,20 @@ app.get('/student-registrations', (req, res) => {
 
 app.get('/lessons', (req, res) => {
     let query1 = "SELECT id_lesson AS 'Lesson ID', lesson_name AS 'Lesson Name', id_proficiency AS 'Proficiency Level', CONCAT(instructor_fname, ' ', instructor_lname) AS 'Instructor' FROM `Lessons` join Instructors on Instructors.id_instructor = Lessons.id_instructor;";
+    let query2 = "SELECT * FROM Proficiencies;";
+    let query3 = "SELECT * FROM Instructors;";
     db.pool.query(query1, function(error, rows, fields){
         let lessons = rows;
-        return res.render('lessons', {data: lessons});
+
+        db.pool.query(query2, (error, rows, fields) => {
+
+            let proficiencies = rows;
+
+            db.pool.query(query3, (error, rows, fields) => {
+                let instructors = rows;
+                return res.render('lessons', {data: lessons, proficiencies: proficiencies, instructors: instructors});
+            }) 
+        })
     })
   });
 
@@ -231,6 +242,53 @@ app.post('/add-proficiency-form', function(req, res){
     })
 });
 
+app.post('/add-lesson-ajax', function(req, res) 
+{
+    // Capture the incoming data and parse it back to a JS object
+    let data = req.body;
+ 
+    // converting to nulls where needed to prevent the empty string bug
+    const values = [
+        data["Lesson Name"] || null,
+        data["Proficiency Level"] || null,
+        data["Instructor"] || null
+    ];
+    const query1 = `INSERT INTO Lessons (lesson_name, id_proficiency, id_instructor) VALUES (?, ?, ?)`;
+    
+    // Create the query and run it on the database
+    
+    db.pool.query(query1, values, function(error, rows, fields){
+        console.log(values)
+        // Check to see if there was an error
+        if (error) {
+
+            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+            console.log(error)
+            res.sendStatus(400);
+        }
+        else
+        {
+            // If there was no error, perform a SELECT * on Students
+            query2 = `SELECT l.id_lesson, l.lesson_name, p.id_proficiency, CONCAT(i.instructor_fname, ' ', i.instructor_lname) AS instructor_name
+            FROM Lessons l JOIN Proficiencies p ON l.id_proficiency = p.id_proficiency JOIN Instructors i ON l.id_instructor = i.id_instructor`;
+            db.pool.query(query2, function(error, rows, fields){
+
+                // If there was an error on the second query, send a 400
+                if (error) {
+                    
+                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+                    console.log(error);
+                    res.sendStatus(400);
+                }
+                // If all went well, send the results of the query back.
+                else
+                {
+                    res.send(rows);
+                }
+            })
+        }
+    })
+});  
 app.delete('/delete-student-ajax/', function(req,res,next){
     let data = req.body;
     let studentID = parseInt(data.Student_ID);

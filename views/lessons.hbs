@@ -31,5 +31,32 @@
         {{/each}}
     </tbody>
 </table>
+
+<div id="add-lesson">
+
+<h2>Add a Lesson</h2>
+<p>To add a Lesson, please enter the information below and click 'Submit'!</p>
+<form id="add-lesson-form-ajax">
+    <label for="input-lesson-name">Lesson Name: </label>
+    <input type="text" name="input-lesson-name" id="input-lesson-name">
+    
+    <label for="input-lesson-proficiency">Proficiency Level: </label>
+    <select type="select" name="input-lesson-proficiency" id="input-lesson-proficiency">
+        {{#each proficiencies}}
+        <option value="{{this.id_proficiency}}">{{this.proficiency_name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-lesson-instructor">Instuctor: </label>
+    <select type="select" name="input-lesson-instructor" id="input-lesson-instructor">
+        {{#each instructors}}
+        <option value="{{this.id_instructor}}" data-name="{{this.instructor_fname}} {{this.instructor_lname}}" >{{this.instructor_fname}} {{this.instructor_lname}}</option>
+        {{/each}}
+    </select>
+
+    <input type="submit">
+</form>
+</div>
+<script src="./js/add_lesson.js"></script>
 <!-- <script src="./js/delete_lesson.js"></script> -->
 <!-- /views/index.hbs -->
