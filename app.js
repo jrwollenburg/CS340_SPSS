@@ -302,6 +302,26 @@ app.delete("/delete-instructor-ajax/", function (req, res, next) {
   );
 });
 
+app.delete("/delete-lesson-ajax/", function (req, res, next) {
+    let data = req.body;
+    let lessonID = parseInt(data.Lesson_ID);
+    let deleteLesson= `DELETE FROM Lessons WHERE id_lesson = ?`;
+  
+    // Delete of student will cascade
+    db.pool.query(
+      deleteLesson,
+      [lessonID],
+      function (error, rows, fields) {
+        if (error) {
+          console.log(error);
+          res.sendStatus(400);
+        } else {
+          res.sendStatus(204);
+        }
+      }
+    );
+  });
+
 app.put("/put-student-ajax", function (req, res, next) {
   let data = req.body;
 
