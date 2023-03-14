@@ -75,6 +75,7 @@ background-color: #ddd;
   }
 #add-student label {
     display: block;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 #add-student input[type="text"] {
@@ -116,6 +117,7 @@ h2 {
   }
 #add-instructor label {
     display: block;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 #add-instructor input[type="text"] {
@@ -144,6 +146,7 @@ h2 {
   }
 #add-skill label {
     display: block;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 #add-skill input[type="text"] {
@@ -174,6 +177,7 @@ h2 {
   }
 #add-lesson label {
     display: block;
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 #add-lesson input[type="text"] {
@@ -185,6 +189,36 @@ h2 {
 }
 
 #add-lesson input[type="submit"] {
+    width: 100%;
+    padding: 6px;
+    margin: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+/* for registrations */
+/*for add lesson*/
+#add-registration {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+#add-registration label {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+#add-registration input[type="text"] {
+    width: 25%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#add-registration input[type="submit"] {
     width: 100%;
     padding: 6px;
     margin: 8px;

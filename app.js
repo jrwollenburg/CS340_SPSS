@@ -43,9 +43,22 @@ app.get("/instructors", function (req, res) {
 });
 
 app.get("/student-registrations", (req, res) => {
-  res.render("studentregistrations");
-});
+  let query1 = "SELECT SL.id_student AS 'Student ID', CONCAT(S.student_fname, ' ', S.student_lname) as 'Student', SL.id_lesson AS 'Lesson ID', L.lesson_name as 'Lesson' FROM Students_has_Lessons SL JOIN Lessons AS L ON SL.id_lesson = L.id_lesson JOIN Students AS S ON SL.id_student = S.id_student;";
+  let query2 = "SELECT * FROM Students;";
+  let query3 = "SELECT * FROM Lessons;";
+  db.pool.query(query1, function (error, rows, fields) {
+    let studentRegistrations = rows;
 
+    db.pool.query(query2, (error, rows, fields) => {
+      let students = rows;
+
+      db.pool.query(query3, (error, rows, fields) => {
+        let lessons = rows;
+        return res.render("studentregistrations", { data: studentRegistrations, students: students, lessons: lessons });
+      });
+    });
+  });
+});
 app.get("/lessons", (req, res) => {
   let query1 =
     "SELECT id_lesson AS 'Lesson ID', lesson_name AS 'Lesson Name', id_proficiency AS 'Proficiency Level', CONCAT(instructor_fname, ' ', instructor_lname) AS 'Instructor' FROM `Lessons` join Instructors on Instructors.id_instructor = Lessons.id_instructor;";
@@ -258,13 +271,48 @@ app.post("/add-lesson-ajax", function (req, res) {
         }
         // If all went well, send the results of the query back.
         else {
-            console.log(rows);
           res.send(rows);
         }
       });
     }
   });
 });
+
+app.post("/add-registration-ajax", function (req, res) {
+  // Capture the incoming data and parse it back to a JS object
+  let data = req.body;
+  let studentID = parseInt(data["Student ID"]);
+  let lessonID = parseInt(data["Lesson ID"]);
+  const query1 = `INSERT INTO Students_has_Lessons (id_student, id_lesson) VALUES (${studentID}, ${lessonID});`;
+
+  // Create the query and run it on the database
+
+  db.pool.query(query1, function (error, rows, fields) {
+    // Check to see if there was an error
+    if (error) {
+      // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+      console.log(error);
+      res.sendStatus(400);
+    } else {
+      query2 = `SELECT S.id_student, CONCAT(S.student_fname, ' ', student_lname) AS student_name, L.id_lesson, L.lesson_name FROM Students_has_Lessons SL JOIN Students S ON SL.id_student = S.id_student JOIN Lessons L ON SL.id_lesson = L.id_lesson;`;
+      db.pool.query(query2, function (error, rows, fields) {
+        // If there was an error on the second query, send a 400
+        if (error) {
+          // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+          console.log(error);
+          res.sendStatus(400);
+        }
+        // If all went well, send the results of the query back.
+        else {
+          res.send(rows);
+        }
+      });
+    }
+  });
+});
+
+
+
 app.delete("/delete-student-ajax/", function (req, res, next) {
   let data = req.body;
   let studentID = parseInt(data.Student_ID);

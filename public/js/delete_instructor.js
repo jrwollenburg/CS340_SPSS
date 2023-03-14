@@ -39,14 +39,3 @@ function deleteRow(Instructor_ID){
        }
     }
 }
-
-function deleteDropDownMenu(Instructor_ID){
-    let selectMenu = document.getElementById("mySelect");
-    for (let i = 0; i < selectMenu.length; i++){
-      if (Number(selectMenu.options[i].value) === Number(Instructor_ID)){
-        selectMenu[i].remove();
-        break;
-    } 
-
-    }
-}

@@ -1,4 +1,4 @@
-// Get the objects we need to modify
+// get the lesson form
 let addLessonForm = document.getElementById('add-lesson-form-ajax');
 
 // Modify the objects we need

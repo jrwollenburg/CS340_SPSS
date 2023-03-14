@@ -1,1 +1,59 @@
 <h1>Student Lesson Registrations</h1>
+<table id = "registrations-table">
+
+    {{!-- Header section --}}
+    <thead>
+
+        {{!-- For just the first row, we print each key of the row object as a header cell so we
+        know what each column means when the pem_fname renders --}}
+        <tr>
+            {{#each data.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th>
+                Delete
+            </th>
+        </tr>
+    </thead>
+
+    {{!-- Body section --}}
+    <tbody>
+
+        {{#each data}}
+        <tr>
+            <td>{{this.[Student ID]}}</td>
+            <td>{{this.[Student]}}</td>
+            <td>{{this.[Lesson ID]}}</td>
+            <td>{{this.[Lesson]}}</td>
+            <td><button onclick="deleteRegistration({{this.[Student ID]}}, {{this.[Lesson ID]}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<div id="add-registration">
+
+<h2>Add a Student Lesson Registration</h2>
+<p>To add a Registration, please enter the information below and click 'Submit'!</p>
+<form id="add-registration-form-ajax">
+    <label for="input-registration-student">Student: </label>
+    <select type="select" name="input-registration-student" id="input-registration-student">
+        {{#each students}}
+        <option value="{{this.id_student}}" data-student="{{this.student_fname}} {{this.student_lname}}">{{this.student_fname}} {{this.student_lname}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-registration-lesson">Lesson: </label>
+    <select type="select" name="input-registration-lesson" id="input-registration-lesson">
+        {{#each lessons}}
+        <option value="{{this.id_lesson}}" data-lesson="{{this.lesson_name}}">{{this.lesson_name}}</option>
+        {{/each}}
+    </select>
+
+    <input type="submit">
+</form>
+</div>
+<script src="./js/add_registration.js"></script>
+<script src="./js/delete_registration.js"></script>
