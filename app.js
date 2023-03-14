@@ -124,7 +124,6 @@ app.post("/add-student-ajax", function (req, res) {
   // Create the query and run it on the database
 
   db.pool.query(query1, values, function (error, rows, fields) {
-    console.log(values);
     // Check to see if there was an error
     if (error) {
       // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
@@ -241,7 +240,6 @@ app.post("/add-lesson-ajax", function (req, res) {
   // Create the query and run it on the database
 
   db.pool.query(query1, values, function (error, rows, fields) {
-    console.log(values);
     // Check to see if there was an error
     if (error) {
       // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
@@ -250,7 +248,7 @@ app.post("/add-lesson-ajax", function (req, res) {
     } else {
       // If there was no error, perform a SELECT * on Students
       query2 = `SELECT l.id_lesson, l.lesson_name, p.id_proficiency, CONCAT(i.instructor_fname, ' ', i.instructor_lname) AS instructor_name
-            FROM Lessons l JOIN Proficiencies p ON l.id_proficiency = p.id_proficiency JOIN Instructors i ON l.id_instructor = i.id_instructor`;
+            FROM Lessons l JOIN Proficiencies p ON l.id_proficiency = p.id_proficiency JOIN Instructors i ON l.id_instructor = i.id_instructor ORDER BY l.id_lesson;`;
       db.pool.query(query2, function (error, rows, fields) {
         // If there was an error on the second query, send a 400
         if (error) {
@@ -260,6 +258,7 @@ app.post("/add-lesson-ajax", function (req, res) {
         }
         // If all went well, send the results of the query back.
         else {
+            console.log(rows);
           res.send(rows);
         }
       });

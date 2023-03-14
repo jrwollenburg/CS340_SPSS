@@ -38,9 +38,7 @@ addLessonForm.addEventListener("submit", function (e) {
             addRowToTable(xhttp.response);
             location.reload(); // just having this here as a workaround for the CSS issue
             // Clear the input fields for another transaction
-            inputLessonName.value = '';
-            inputLessonProficiency.value = '';
-            inputLessonInstructor.value = '';      
+            inputLessonName.value = '';      
         }
         else if (xhttp.readyState == 4 && xhttp.status != 200) {
             console.log("There was an error with the input.")
@@ -63,7 +61,7 @@ addRowToTable = (data) => {
     // Get a reference to the new row from the database query (last object)
     let parsedData = JSON.parse(data);
     let newRow = parsedData[parsedData.length - 1]
-  
+
     // Create a row and cells for data
     let row = document.createElement("TR");
     let idCell = document.createElement("TD");

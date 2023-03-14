@@ -162,6 +162,36 @@ h2 {
     border-radius: 3px;
 }
 
+
+
+/*for add lesson*/
+#add-lesson {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+  }
+#add-lesson label {
+    display: block;
+    margin-bottom: 5px;
+}
+#add-lesson input[type="text"] {
+    width: 25%;
+    padding: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#add-lesson input[type="submit"] {
+    width: 100%;
+    padding: 6px;
+    margin: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
 footer {
     width: 100%;
     text-align: center;
