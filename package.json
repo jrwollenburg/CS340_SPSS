@@ -13,5 +13,8 @@
     "express-handlebars": "^6.0.7",
     "forever": "^4.0.3",
     "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.21"
   }
 }

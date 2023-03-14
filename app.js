@@ -6,7 +6,6 @@
     Source: https://github.com/osu-cs340-ecampus/nodejs-starter-app
 */
 
-
 /*
     SETUP
 */
@@ -14,351 +13,338 @@
 
 var express = require("express"); // We are using the express library for the web server
 var app = express(); // We need to instantiate an express object to interact with the server in our code
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
-app.use(express.static('public'))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("public"));
 PORT = 22998; // Set a port number at the top so it's easy to change in the future
 // Database
-var db = require('./database/db-connector')
+var db = require("./database/db-connector");
 // Handlebars
-const { engine } = require('express-handlebars');
-var exphbs = require('express-handlebars');     // Import express-handlebars
-app.engine('.hbs', engine({extname: ".hbs"}));  // Create an instance of the handlebars engine to process templates
-app.set('view engine', '.hbs');                 // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
+const { engine } = require("express-handlebars");
+var exphbs = require("express-handlebars"); // Import express-handlebars
+app.engine(".hbs", engine({ extname: ".hbs" })); // Create an instance of the handlebars engine to process templates
+app.set("view engine", ".hbs"); // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
 /*
     ROUTES
 */
-app.get('/index', (req, res) => {
-    res.render('index');
-  });
+app.get("/index", (req, res) => {
+  res.render("index");
+});
 
-app.get('/instructors', function(req, res)
-{
-    let query1 = "SELECT id_instructor as 'Instructor ID', instructor_fname as 'First Name', instructor_lname as 'Last Name', instructor_phone_number as 'Phone Number', years_of_experience as 'Years of Experience', first_aid_certified as 'First Aid Certified' FROM Instructors;";
-    
-    
-    // Run the second query
-    db.pool.query(query1, function(error, rows, fields){
+app.get("/instructors", function (req, res) {
+  let query1 =
+    "SELECT id_instructor as 'Instructor ID', instructor_fname as 'First Name', instructor_lname as 'Last Name', instructor_phone_number as 'Phone Number', years_of_experience as 'Years of Experience', CASE first_aid_certified WHEN 1 then 'Yes' WHEN 0 then 'No' END as 'First Aid Certified' FROM Instructors;";
+
+  // Run the second query
+  db.pool.query(query1, function (error, rows, fields) {
+    let instructors = rows;
+    return res.render("instructors", { data: instructors });
+  });
+});
+
+app.get("/student-registrations", (req, res) => {
+  res.render("studentregistrations");
+});
+
+app.get("/lessons", (req, res) => {
+  let query1 =
+    "SELECT id_lesson AS 'Lesson ID', lesson_name AS 'Lesson Name', id_proficiency AS 'Proficiency Level', CONCAT(instructor_fname, ' ', instructor_lname) AS 'Instructor' FROM `Lessons` join Instructors on Instructors.id_instructor = Lessons.id_instructor;";
+  let query2 = "SELECT * FROM Proficiencies;";
+  let query3 = "SELECT * FROM Instructors;";
+  db.pool.query(query1, function (error, rows, fields) {
+    let lessons = rows;
+
+    db.pool.query(query2, (error, rows, fields) => {
+      let proficiencies = rows;
+
+      db.pool.query(query3, (error, rows, fields) => {
         let instructors = rows;
-        return res.render('instructors', {data: instructors});
-    })
+        return res.render("lessons", {
+          data: lessons,
+          proficiencies: proficiencies,
+          instructors: instructors,
+        });
+      });
+    });
+  });
 });
 
-app.get('/student-registrations', (req, res) => {
-    res.render('studentregistrations');
+app.get("/proficiencies", (req, res) => {
+  let query1 =
+    "SELECT id_proficiency AS 'Proficiency ID', proficiency_name AS 'Proficiency Name' FROM Proficiencies ORDER BY id_proficiency ASC;";
+  db.pool.query(query1, function (error, rows, fields) {
+    let proficiencies = rows;
+    return res.render("proficiencies", { proficiencies: proficiencies });
   });
-
-app.get('/lessons', (req, res) => {
-    let query1 = "SELECT id_lesson AS 'Lesson ID', lesson_name AS 'Lesson Name', id_proficiency AS 'Proficiency Level', CONCAT(instructor_fname, ' ', instructor_lname) AS 'Instructor' FROM `Lessons` join Instructors on Instructors.id_instructor = Lessons.id_instructor;";
-    let query2 = "SELECT * FROM Proficiencies;";
-    let query3 = "SELECT * FROM Instructors;";
-    db.pool.query(query1, function(error, rows, fields){
-        let lessons = rows;
-
-        db.pool.query(query2, (error, rows, fields) => {
-
-            let proficiencies = rows;
-
-            db.pool.query(query3, (error, rows, fields) => {
-                let instructors = rows;
-                return res.render('lessons', {data: lessons, proficiencies: proficiencies, instructors: instructors});
-            }) 
-        })
-    })
-  });
-
-app.get('/proficiencies', (req, res) => {
-    let query1 = "SELECT id_proficiency AS 'Proficiency ID', proficiency_name AS 'Proficiency Name' FROM Proficiencies ORDER BY id_proficiency ASC;";
-    db.pool.query(query1, function(error, rows, fields){
-        let proficiencies = rows;
-        return res.render('proficiencies', {proficiencies: proficiencies});})
-    
-  });
-
-app.get('/students', function(req, res)
-    {
-      let query1 = "SELECT id_student as 'Student ID', id_proficiency as 'Proficiency ID', student_fname as 'First Name', student_lname as 'Last Name', student_phone_number as 'Phone Number', emergency_fname as 'Emergency Contact First Name', emergency_lname as 'Emergency Contact Last Name', emergency_phone as 'Emergency Contact Number', waiver_signed as 'Waiver Signed' FROM Students;";
-      let query2 = "SELECT * FROM Proficiencies;";
-      db.pool.query(query1, function(error, rows, fields){
-        
-        // Save the people
-        let students = rows;
-        
-        // Run the second query
-        db.pool.query(query2, (error, rows, fields) => {
-            
-            let proficiencies = rows;
-            return res.render('students', {data: students, proficiencies: proficiencies});
-        })
-      })
-  });
-
-app.post('/add-student-ajax', function(req, res) 
-{
-    // Capture the incoming data and parse it back to a JS object
-    let data = req.body;
-
-    let waiver_signed = data["Waiver Signed"];
-    
-    
-    // converting to nulls where needed to prevent the empty string bug
-    const values = [
-        data["Proficiency ID"] || null,
-        data["First Name"] || null,
-        data["Last Name"] || null,
-        data["Phone Number"] || null,
-        data["Emergency Contact First Name"] || null,
-        data["Emergency Contact Last Name"] || null,
-        data["Emergency Contact Number"] || null
-    ];
-    // waiver signed is sent as yes/no so conver that to the appropriate format of 1/0.
-    if (waiver_signed === "Yes"){
-        waiver_signed = 1;
-    } else {
-        waiver_signed = 0;
-    }
-    const query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (?, ?, ?, ?, ?, ?, ?, ${waiver_signed})`;
-    
-    // Create the query and run it on the database
-    
-    db.pool.query(query1, values, function(error, rows, fields){
-        console.log(values)
-        // Check to see if there was an error
-        if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
-            res.sendStatus(400);
-        }
-        else
-        {
-            // If there was no error, perform a SELECT * on Students
-            query2 = `SELECT * FROM Students;`;
-            db.pool.query(query2, function(error, rows, fields){
-
-                // If there was an error on the second query, send a 400
-                if (error) {
-                    
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                    console.log(error);
-                    res.sendStatus(400);
-                }
-                // If all went well, send the results of the query back.
-                else
-                {
-                    res.send(rows);
-                }
-            })
-        }
-    })
-});  
-
-app.post('/add-instructor-ajax', function(req, res)
-{
-    // Capture the incoming data and parse it back to a JS object
-    let data = req.body;
-    let first_aid_certified = data["First Aid Certified"]
-    // Converting to nulls where needed to prevent the empty string bug
-    const values = [
-        data["First Name"] || null,
-        data["Last Name"] || null,
-        data["Phone Number"] || null,
-        data["Years of Experience"] || null,
-    ];
-
-    if (first_aid_certified === "Yes"){
-        first_aid_certified = 1;
-    } else {
-        first_aid_certified = 0;
-    }
-
-    const query1 = `INSERT INTO Instructors (instructor_fname, instructor_lname, instructor_phone_number, years_of_experience, first_aid_certified) VALUES (?, ?, ?, ?, ${first_aid_certified})`;
-
-    // Create the query and run it on the database
-    db.pool.query(query1, values, function(error, rows, fields){
-
-        // Check to see if there was an error
-        if (error) {
-
-        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
-            res.sendStatus(400);
-        }
-        else
-        {
-            // If there was no error, perform a SELECT * on Instructors
-            query2 = `SELECT * FROM Instructors;`;
-            db.pool.query(query2, function(error, rows, fields){
-
-                // If there was an error on the second query, send a 400
-                if (error) {
-                    
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                    console.log(error);
-                    res.sendStatus(400);
-                }
-                // If all went well, send the results of the query back.
-                else
-                {
-                    res.send(rows);
-                }
-            })
-        }
-    })
 });
 
-app.post('/add-proficiency-form', function(req, res){
-    // Capture the incoming data and parse it back to a JS object
-    let data = req.body;
+app.get("/students", function (req, res) {
+  let query1 =
+    "SELECT id_student as 'Student ID', id_proficiency as 'Proficiency ID', student_fname as 'First Name', student_lname as 'Last Name', student_phone_number as 'Phone Number', emergency_fname as 'Emergency Contact First Name', emergency_lname as 'Emergency Contact Last Name', emergency_phone as 'Emergency Contact Number',  CASE waiver_signed WHEN 1 THEN 'Yes' WHEN 0 THEN 'No' END as 'Waiver Signed' FROM Students;";
+  let query2 = "SELECT * FROM Proficiencies;";
+  db.pool.query(query1, function (error, rows, fields) {
+    // Save the people
+    let students = rows;
 
-    // Capture NULL values
-    let id = data['input-id'];
-
-    let name = data['input-name'];
-    // If either is null its a bad request, so just null both and send that so the error occurs.
-    if (id === '' || name === ''){
-        id = null
-        name = null
-        query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES (${id}, ${name})`;
-    } else {
-        query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES ('${data['input-id']}', '${data['input-name']}')`;
-    }
-    // Create the query and run it on the database
-    
-    db.pool.query(query1, function(error, rows, fields){
-
-        // Check to see if there was an error
-        if (error) {
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
-            //res.status(400).send('An error has occurred. You may have entered duplicate or null data. Please refresh and try again.');
-            res.status(400).redirect('/proficiencies');
-        }
-
-        else
-        {
-            res.redirect('/proficiencies');
-        }
-    })
+    // Run the second query
+    db.pool.query(query2, (error, rows, fields) => {
+      let proficiencies = rows;
+      return res.render("students", {
+        data: students,
+        proficiencies: proficiencies,
+      });
+    });
+  });
 });
 
-app.post('/add-lesson-ajax', function(req, res) 
-{
-    // Capture the incoming data and parse it back to a JS object
-    let data = req.body;
- 
-    // converting to nulls where needed to prevent the empty string bug
-    const values = [
-        data["Lesson Name"] || null,
-        data["Proficiency Level"] || null,
-        data["Instructor"] || null
-    ];
-    const query1 = `INSERT INTO Lessons (lesson_name, id_proficiency, id_instructor) VALUES (?, ?, ?)`;
-    
-    // Create the query and run it on the database
-    
-    db.pool.query(query1, values, function(error, rows, fields){
-        console.log(values)
-        // Check to see if there was an error
-        if (error) {
+app.post("/add-student-ajax", function (req, res) {
+  // Capture the incoming data and parse it back to a JS object
+  let data = req.body;
 
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error)
-            res.sendStatus(400);
-        }
-        else
-        {
-            // If there was no error, perform a SELECT * on Students
-            query2 = `SELECT l.id_lesson, l.lesson_name, p.id_proficiency, CONCAT(i.instructor_fname, ' ', i.instructor_lname) AS instructor_name
-            FROM Lessons l JOIN Proficiencies p ON l.id_proficiency = p.id_proficiency JOIN Instructors i ON l.id_instructor = i.id_instructor`;
-            db.pool.query(query2, function(error, rows, fields){
+  let waiver_signed = data["Waiver Signed"];
 
-                // If there was an error on the second query, send a 400
-                if (error) {
-                    
-                    // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-                    console.log(error);
-                    res.sendStatus(400);
-                }
-                // If all went well, send the results of the query back.
-                else
-                {
-                    res.send(rows);
-                }
-            })
-        }
-    })
-});  
-app.delete('/delete-student-ajax/', function(req,res,next){
-    let data = req.body;
-    let studentID = parseInt(data.Student_ID);
-    let deleteStudents= `DELETE FROM Students WHERE id_student = ?`;
-  
-    // Delete of student will cascade
-    db.pool.query(deleteStudents, [studentID], function(error, rows, fields) {
+  // converting to nulls where needed to prevent the empty string bug
+  const values = [
+    data["Proficiency ID"] || null,
+    data["First Name"] || null,
+    data["Last Name"] || null,
+    data["Phone Number"] || null,
+    data["Emergency Contact First Name"] || null,
+    data["Emergency Contact Last Name"] || null,
+    data["Emergency Contact Number"] || null,
+  ];
+  // waiver signed is sent as yes/no so conver that to the appropriate format of 1/0.
+  if (waiver_signed === "Yes") {
+    waiver_signed = 1;
+  } else {
+    waiver_signed = 0;
+  }
+  const query1 = `INSERT INTO Students (id_proficiency, student_fname, student_lname, student_phone_number, emergency_fname, emergency_lname, emergency_phone, waiver_signed) VALUES (?, ?, ?, ?, ?, ?, ?, ${waiver_signed})`;
 
-        if (error) {
-            console.log(error);
-            res.sendStatus(400);
-        } else {
-            res.sendStatus(204);
-        }
-    })
-  });
+  // Create the query and run it on the database
 
-app.delete('/delete-instructor-ajax/', function(req,res,next){
-    let data = req.body;
-    let instructorID = parseInt(data.Instructor_ID);
-    let deleteInstructors = `DELETE FROM Instructors WHERE id_instructor = ?`;
-
-// Delete of student will cascade
-db.pool.query(deleteInstructors, [instructorID], function(error, rows, fields) {
-
+  db.pool.query(query1, values, function (error, rows, fields) {
+    console.log(values);
+    // Check to see if there was an error
     if (error) {
+      // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+      console.log(error);
+      res.sendStatus(400);
+    } else {
+      // If there was no error, perform a SELECT * on Students
+      query2 = `SELECT * FROM Students;`;
+      db.pool.query(query2, function (error, rows, fields) {
+        // If there was an error on the second query, send a 400
+        if (error) {
+          // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+          console.log(error);
+          res.sendStatus(400);
+        }
+        // If all went well, send the results of the query back.
+        else {
+          res.send(rows);
+        }
+      });
+    }
+  });
+});
+
+app.post("/add-instructor-ajax", function (req, res) {
+  // Capture the incoming data and parse it back to a JS object
+  let data = req.body;
+  let first_aid_certified = data["First Aid Certified"];
+  // Converting to nulls where needed to prevent the empty string bug
+  const values = [
+    data["First Name"] || null,
+    data["Last Name"] || null,
+    data["Phone Number"] || null,
+    data["Years of Experience"] || null,
+  ];
+
+  if (first_aid_certified === "Yes") {
+    first_aid_certified = 1;
+  } else {
+    first_aid_certified = 0;
+  }
+
+  const query1 = `INSERT INTO Instructors (instructor_fname, instructor_lname, instructor_phone_number, years_of_experience, first_aid_certified) VALUES (?, ?, ?, ?, ${first_aid_certified})`;
+
+  // Create the query and run it on the database
+  db.pool.query(query1, values, function (error, rows, fields) {
+    // Check to see if there was an error
+    if (error) {
+      // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+      console.log(error);
+      res.sendStatus(400);
+    } else {
+      // If there was no error, perform a SELECT * on Instructors
+      query2 = `SELECT * FROM Instructors;`;
+      db.pool.query(query2, function (error, rows, fields) {
+        // If there was an error on the second query, send a 400
+        if (error) {
+          // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+          console.log(error);
+          res.sendStatus(400);
+        }
+        // If all went well, send the results of the query back.
+        else {
+          res.send(rows);
+        }
+      });
+    }
+  });
+});
+
+app.post("/add-proficiency-form", function (req, res) {
+  // Capture the incoming data and parse it back to a JS object
+  let data = req.body;
+
+  // Capture NULL values
+  let id = data["input-id"];
+
+  let name = data["input-name"];
+  // If either is null its a bad request, so just null both and send that so the error occurs.
+  if (id === "" || name === "") {
+    id = null;
+    name = null;
+    query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES (${id}, ${name})`;
+  } else {
+    query1 = `INSERT INTO Proficiencies (id_proficiency, proficiency_name) VALUES ('${data["input-id"]}', '${data["input-name"]}')`;
+  }
+  // Create the query and run it on the database
+
+  db.pool.query(query1, function (error, rows, fields) {
+    // Check to see if there was an error
+    if (error) {
+      // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+      console.log(error);
+      //res.status(400).send('An error has occurred. You may have entered duplicate or null data. Please refresh and try again.');
+      res.status(400).redirect("/proficiencies");
+    } else {
+      res.redirect("/proficiencies");
+    }
+  });
+});
+
+app.post("/add-lesson-ajax", function (req, res) {
+  // Capture the incoming data and parse it back to a JS object
+  let data = req.body;
+
+  // converting to nulls where needed to prevent the empty string bug
+  const values = [
+    data["Lesson Name"] || null,
+    data["Proficiency Level"] || null,
+    data["Instructor"] || null,
+  ];
+  const query1 = `INSERT INTO Lessons (lesson_name, id_proficiency, id_instructor) VALUES (?, ?, ?)`;
+
+  // Create the query and run it on the database
+
+  db.pool.query(query1, values, function (error, rows, fields) {
+    console.log(values);
+    // Check to see if there was an error
+    if (error) {
+      // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+      console.log(error);
+      res.sendStatus(400);
+    } else {
+      // If there was no error, perform a SELECT * on Students
+      query2 = `SELECT l.id_lesson, l.lesson_name, p.id_proficiency, CONCAT(i.instructor_fname, ' ', i.instructor_lname) AS instructor_name
+            FROM Lessons l JOIN Proficiencies p ON l.id_proficiency = p.id_proficiency JOIN Instructors i ON l.id_instructor = i.id_instructor`;
+      db.pool.query(query2, function (error, rows, fields) {
+        // If there was an error on the second query, send a 400
+        if (error) {
+          // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+          console.log(error);
+          res.sendStatus(400);
+        }
+        // If all went well, send the results of the query back.
+        else {
+          res.send(rows);
+        }
+      });
+    }
+  });
+});
+app.delete("/delete-student-ajax/", function (req, res, next) {
+  let data = req.body;
+  let studentID = parseInt(data.Student_ID);
+  let deleteStudents = `DELETE FROM Students WHERE id_student = ?`;
+
+  // Delete of student will cascade
+  db.pool.query(deleteStudents, [studentID], function (error, rows, fields) {
+    if (error) {
+      console.log(error);
+      res.sendStatus(400);
+    } else {
+      res.sendStatus(204);
+    }
+  });
+});
+
+app.delete("/delete-instructor-ajax/", function (req, res, next) {
+  let data = req.body;
+  let instructorID = parseInt(data.Instructor_ID);
+  let deleteInstructors = `DELETE FROM Instructors WHERE id_instructor = ?`;
+
+  // Delete of student will cascade
+  db.pool.query(
+    deleteInstructors,
+    [instructorID],
+    function (error, rows, fields) {
+      if (error) {
         console.log(error);
         res.sendStatus(400);
-    } else {
+      } else {
         res.sendStatus(204);
+      }
     }
-})
+  );
 });
 
-  app.put('/put-student-ajax', function(req,res,next){
-    let data = req.body;
+app.put("/put-student-ajax", function (req, res, next) {
+  let data = req.body;
 
-    let proficiency = data.proficiency;
-    let student = parseInt(data.fullname);
-    
-    if (proficiency === 'null'){
-        proficiency = null}
-    let queryUpdateProficiency = `UPDATE Students SET id_proficiency = ? WHERE Students.id_student = ?`;
-    let selectProficiency = `SELECT * FROM Proficiencies WHERE id_proficiency = ?`
-    
-          // Run the 1st query
-          db.pool.query(queryUpdateProficiency, [proficiency, student], function(error, rows, fields){
+  let proficiency = data.proficiency;
+  let student = parseInt(data.fullname);
 
-              if (error) {
-              // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+  if (proficiency === "null") {
+    proficiency = null;
+  }
+  let queryUpdateProficiency = `UPDATE Students SET id_proficiency = ? WHERE Students.id_student = ?`;
+  let selectProficiency = `SELECT * FROM Proficiencies WHERE id_proficiency = ?`;
+
+  // Run the 1st query
+  db.pool.query(
+    queryUpdateProficiency,
+    [proficiency, student],
+    function (error, rows, fields) {
+      if (error) {
+        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+        console.log(error);
+        res.sendStatus(400);
+      }
+
+      // If there was no error, we run our second query and return that data so we can use it to update the people's
+      // table on the front-end
+      else {
+        // Run the second query
+        db.pool.query(
+          selectProficiency,
+          [proficiency],
+          function (error, rows, fields) {
+            if (error) {
               console.log(error);
               res.sendStatus(400);
-              }
-  
-              // If there was no error, we run our second query and return that data so we can use it to update the people's
-              // table on the front-end
-              else
-              {
-                  // Run the second query
-                  db.pool.query(selectProficiency, [proficiency], function(error, rows, fields) {
-  
-                      if (error) {
-                          console.log(error);
-                          res.sendStatus(400);
-                      } else {
-                          res.send(rows);
-                      }
-                  })
-              }
-  })});
+            } else {
+              res.send(rows);
+            }
+          }
+        );
+      }
+    }
+  );
+});
 /*
     LISTENER
 */
