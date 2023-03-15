@@ -226,6 +226,27 @@ h2 {
     border-radius: 3px;
 }
 
+/* update registration form */
+#update-registration {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+#update-registration input[type="submit"] {
+    width: 100%;
+    padding: 6px;
+    margin: 8px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#lazy-spacer {
+    margin: 3px
+}
+
 footer {
     width: 100%;
     text-align: center;

@@ -439,6 +439,34 @@ app.put("/put-student-ajax", function (req, res, next) {
     }
   );
 });
+
+app.put("/put-registration-ajax", function (req, res, next) {
+  let data = req.body;
+  let studentToUpdate = parseInt(data.iStudent);
+  let lessonToUpdate = parseInt(data.iLesson);
+  let newStudent = parseInt(data.oStudent);
+  let newLesson = parseInt(data.oLesson);
+  let queryUpdateRegistration = `UPDATE Students_has_Lessons SET id_student = ?, id_lesson = ? WHERE id_student = ? and id_lesson = ?`;
+  
+  // Run the 1st query
+  db.pool.query(
+    queryUpdateRegistration,
+    [newStudent, newLesson, studentToUpdate, lessonToUpdate],
+    function (error, rows, fields) {
+      if (error) {
+
+        console.log(error);
+        res.sendStatus(400);
+      }
+
+      else {
+        res.send(rows);
+      }
+    }
+  );
+});
+
+
 /*
     LISTENER
 */
