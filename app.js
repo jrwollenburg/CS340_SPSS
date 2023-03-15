@@ -25,7 +25,7 @@ var exphbs = require("express-handlebars"); // Import express-handlebars
 app.engine(".hbs", engine({ extname: ".hbs" })); // Create an instance of the handlebars engine to process templates
 app.set("view engine", ".hbs"); // Tell express to use the handlebars engine whenever it encounters a *.hbs file.
 /*
-    ROUTES
+    The folowing get() routes are for rendering the pages and the data on the pages.
 */
 app.get("/index", (req, res) => {
   res.render("index");
@@ -59,6 +59,7 @@ app.get("/student-registrations", (req, res) => {
     });
   });
 });
+
 app.get("/lessons", (req, res) => {
   let query1 =
     "SELECT id_lesson AS 'Lesson ID', lesson_name AS 'Lesson Name', id_proficiency AS 'Proficiency Level', CONCAT(instructor_fname, ' ', instructor_lname) AS 'Instructor' FROM `Lessons` join Instructors on Instructors.id_instructor = Lessons.id_instructor;";
@@ -96,7 +97,7 @@ app.get("/students", function (req, res) {
     "SELECT id_student as 'Student ID', id_proficiency as 'Proficiency ID', student_fname as 'First Name', student_lname as 'Last Name', student_phone_number as 'Phone Number', emergency_fname as 'Emergency Contact First Name', emergency_lname as 'Emergency Contact Last Name', emergency_phone as 'Emergency Contact Number',  CASE waiver_signed WHEN 1 THEN 'Yes' WHEN 0 THEN 'No' END as 'Waiver Signed' FROM Students;";
   let query2 = "SELECT * FROM Proficiencies;";
   db.pool.query(query1, function (error, rows, fields) {
-    // Save the people
+
     let students = rows;
 
     // Run the second query
@@ -110,6 +111,7 @@ app.get("/students", function (req, res) {
   });
 });
 
+/* Add a new student */
 app.post("/add-student-ajax", function (req, res) {
   // Capture the incoming data and parse it back to a JS object
   let data = req.body;
@@ -161,6 +163,8 @@ app.post("/add-student-ajax", function (req, res) {
   });
 });
 
+
+/* Add instructor*/
 app.post("/add-instructor-ajax", function (req, res) {
   // Capture the incoming data and parse it back to a JS object
   let data = req.body;
@@ -207,6 +211,7 @@ app.post("/add-instructor-ajax", function (req, res) {
   });
 });
 
+/* Adds a proficiency */
 app.post("/add-proficiency-form", function (req, res) {
   // Capture the incoming data and parse it back to a JS object
   let data = req.body;
@@ -238,6 +243,7 @@ app.post("/add-proficiency-form", function (req, res) {
   });
 });
 
+/* Adds a lesson */
 app.post("/add-lesson-ajax", function (req, res) {
   // Capture the incoming data and parse it back to a JS object
   let data = req.body;
@@ -278,6 +284,7 @@ app.post("/add-lesson-ajax", function (req, res) {
   });
 });
 
+/* Adds a student lesson registration*/
 app.post("/add-registration-ajax", function (req, res) {
   // Capture the incoming data and parse it back to a JS object
   let data = req.body;
@@ -312,7 +319,7 @@ app.post("/add-registration-ajax", function (req, res) {
 });
 
 
-
+/* Deletes the student */
 app.delete("/delete-student-ajax/", function (req, res, next) {
   let data = req.body;
   let studentID = parseInt(data.Student_ID);
@@ -329,12 +336,31 @@ app.delete("/delete-student-ajax/", function (req, res, next) {
   });
 });
 
+/* Deletes the registration ie intersection table*/
+app.delete("/delete-registration-ajax/", function (req, res, next) {
+  let data = req.body;
+  let studentID = parseInt(data.Student_ID);
+  let lessonID = parseInt(data.Lesson_ID);
+  let deleteRegistrations = `DELETE FROM Students_has_Lessons WHERE id_student = ? AND id_lesson = ?`;
+
+  // Delete the registration using the student and lesson IDs
+  db.pool.query(deleteRegistrations, [studentID, lessonID], function (error, rows, fields) {
+    if (error) {
+      console.log(error);
+      res.sendStatus(400);
+    } else {
+      res.sendStatus(204);
+    }
+  });
+});
+
+/* Deletes the instructor */
 app.delete("/delete-instructor-ajax/", function (req, res, next) {
   let data = req.body;
   let instructorID = parseInt(data.Instructor_ID);
   let deleteInstructors = `DELETE FROM Instructors WHERE id_instructor = ?`;
 
-  // Delete of student will cascade
+  // Delete of instructor will cascade
   db.pool.query(
     deleteInstructors,
     [instructorID],
@@ -349,12 +375,13 @@ app.delete("/delete-instructor-ajax/", function (req, res, next) {
   );
 });
 
+/* Deletes the lesson */
 app.delete("/delete-lesson-ajax/", function (req, res, next) {
     let data = req.body;
     let lessonID = parseInt(data.Lesson_ID);
     let deleteLesson= `DELETE FROM Lessons WHERE id_lesson = ?`;
   
-    // Delete of student will cascade
+    // Delete the lesson
     db.pool.query(
       deleteLesson,
       [lessonID],
@@ -369,6 +396,8 @@ app.delete("/delete-lesson-ajax/", function (req, res, next) {
     );
   });
 
+
+ /* UPDATES the Student */ 
 app.put("/put-student-ajax", function (req, res, next) {
   let data = req.body;
 
@@ -387,13 +416,11 @@ app.put("/put-student-ajax", function (req, res, next) {
     [proficiency, student],
     function (error, rows, fields) {
       if (error) {
-        // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
+
         console.log(error);
         res.sendStatus(400);
       }
 
-      // If there was no error, we run our second query and return that data so we can use it to update the people's
-      // table on the front-end
       else {
         // Run the second query
         db.pool.query(

@@ -49,8 +49,8 @@ addRegistrationForm.addEventListener("submit", function (e) {
 addRowToTable = (data) => {
   // Get a reference to the current table on the page and clear it out.
   let currentTable = document.getElementById("registrations-table");
-  console.log(data);
   // Get the location where we should insert the new row (end of table)
+  // For this table, there's no real good way to sort the data. For simplicity, we add to the end and immediately reload the page.
   let newRowIndex = currentTable.rows.length;
 
   // Get a reference to the new row from the database query (last object)
@@ -65,8 +65,8 @@ addRowToTable = (data) => {
   let lnameCell = document.createElement("TD");
   let deleteCell = document.createElement("TD");
   // Fill the cells with correct data
-  sidCell.innerText = newRow.id_lesson;
-  lidCell.innerText = newRow.lesson_name;
+  sidCell.innerText = newRow.id_student;
+  lidCell.innerText = newRow.id_lesson;
   snameCell.innerText = newRow.student_name;
   lnameCell.innerText = newRow.lesson_name;
   deleteButton = document.createElement("button");
@@ -77,8 +77,8 @@ addRowToTable = (data) => {
   deleteCell.appendChild(deleteButton);
   // Add the cells to the row
     row.appendChild(sidCell);
-    row.appendChild(lidCell);
     row.appendChild(snameCell);
+    row.appendChild(lidCell);
     row.appendChild(lnameCell);
     row.appendChild(deleteCell);
   // Add a row attribute so the deleteRow function can find a newly added row
